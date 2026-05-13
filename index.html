@@ -938,11 +938,6 @@ L.marker([30.025, 119.922], { icon: midLabel }).addTo(map);
 /* 隐藏Leaflet默认marker图标 */
 .leaflet-marker-icon { background: none !important; border: none !important; }
 
-/* 深色地图：滤镜加在瓦片容器上（单层合成），而非每张瓦片 — 手机端兼容 */
-.leaflet-tile-pane {
-  filter: invert(90%) hue-rotate(180deg) saturate(0.55) brightness(0.82);
-}
-
 /* 手机端地图高度适配 */
 @media (max-width: 768px) {
   #leaflet-map { height: 280px !important; }
