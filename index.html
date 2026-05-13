@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>少年AI · 青少年AI思维一对一教学</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold: #F0C040;
+      --gold-dim: rgba(240,192,64,0.15);
+      --gold-mid: rgba(240,192,64,0.4);
+      --dark: #0D0D1A;
+      --dark2: #13131F;
+      --dark3: #1A1A2E;
+      --dark4: #22223A;
+      --white: #F5F5F0;
+      --gray: #888899;
+      --gray2: #CCCCDD;
+      --accent: #4FC3C3;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--dark);
+      color: var(--white);
+      font-family: 'Noto Sans SC', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 4rem;
+      background: rgba(13,13,26,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 0.5px solid rgba(240,192,64,0.15);
+    }
+    .nav-logo {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 1.2rem; font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 2px;
+    }
+    .nav-links { display: flex; gap: 2.5rem; }
+    .nav-links a {
+      color: var(--gray2); font-size: 0.85rem; text-decoration: none;
+      letter-spacing: 1px;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-cta {
+      background: var(--gold); color: var(--dark);
+      padding: 0.5rem 1.4rem; border-radius: 2px;
+      font-size: 0.85rem; font-weight: 700;
+      text-decoration: none; letter-spacing: 1px;
+      transition: opacity 0.2s;
+    }
+    .nav-cta:hover { opacity: 0.85; }
+
+    /* HERO */
+    #hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 8rem 4rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 60% 60% at 70% 40%, rgba(240,192,64,0.08) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 50% at 20% 80%, rgba(79,195,195,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 30% 40% at 50% 10%, rgba(120,80,255,0.05) 0%, transparent 60%);
+    }
+    .hero-grid {
+      position: absolute; inset: 0; z-index: 0;
+      background-image:
+        linear-gradient(rgba(240,192,64,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(240,192,64,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    #hero-canvas {
+      position: absolute; inset: 0; z-index: 0;
+      pointer-events: none;
+    }
+
+    /* FLOATING CARDS */
+    .hero-floats {
+      position: absolute; right: 4rem; top: 50%;
+      transform: translateY(-50%);
+      display: flex; flex-direction: column; gap: 1rem;
+      z-index: 1;
+    }
+    .float-card {
+      background: rgba(26,26,46,0.85);
+      border: 0.5px solid rgba(240,192,64,0.25);
+      backdrop-filter: blur(12px);
+      padding: 1rem 1.25rem;
+      border-radius: 4px;
+      min-width: 240px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    .float-card:nth-child(1) { animation: floatA 6s ease-in-out infinite; margin-left: 2rem; }
+    .float-card:nth-child(2) { animation: floatB 7s ease-in-out infinite; }
+    .float-card:nth-child(3) { animation: floatA 8s ease-in-out infinite; margin-left: 1.5rem; }
+    @keyframes floatA {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    @keyframes floatB {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(8px); }
+    }
+    .float-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.62rem; color: var(--gold);
+      letter-spacing: 2px; margin-bottom: 0.5rem;
+      opacity: 0.8;
+    }
+    .float-msg {
+      font-size: 0.82rem; color: var(--gray2); line-height: 1.6;
+    }
+    .float-msg .ai-reply {
+      color: var(--accent); font-size: 0.78rem;
+      margin-top: 0.4rem; padding-top: 0.4rem;
+      border-top: 0.5px solid rgba(255,255,255,0.08);
+    }
+    .float-bar {
+      display: flex; gap: 4px; margin-bottom: 0.5rem;
+    }
+    .float-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+    }
+    .fd1 { background: #ff6b6b; }
+    .fd2 { background: #ffd93d; }
+    .fd3 { background: #6bcb77; }
+
+    /* typing cursor blink */
+    .blink { animation: blink 1.2s step-end infinite; }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+    /* orbit rings */
+    .hero-orbit {
+      position: absolute; right: 3rem; top: 50%;
+      transform: translateY(-50%);
+      width: 420px; height: 420px;
+      z-index: 0; pointer-events: none;
+    }
+    .orbit-ring {
+      position: absolute; border-radius: 50%;
+      border: 0.5px solid rgba(240,192,64,0.08);
+    }
+    .orbit-ring:nth-child(1) { inset: 0; animation: spin 20s linear infinite; }
+    .orbit-ring:nth-child(2) { inset: 40px; animation: spin 15s linear infinite reverse; border-color: rgba(79,195,195,0.08); }
+    .orbit-ring:nth-child(3) { inset: 80px; animation: spin 25s linear infinite; border-color: rgba(120,80,255,0.06); }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    .orbit-dot {
+      position: absolute; width: 6px; height: 6px; border-radius: 50%;
+      background: var(--gold); top: -3px; left: 50%; margin-left: -3px;
+      box-shadow: 0 0 8px var(--gold);
+    }
+    .orbit-ring:nth-child(2) .orbit-dot { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+    .orbit-ring:nth-child(3) .orbit-dot { background: #a78bfa; box-shadow: 0 0 8px #a78bfa; width: 4px; height: 4px; top: -2px; margin-left: -2px; }
+
+    .hero-content { position: relative; z-index: 2; max-width: 640px; }
+
+    @media (max-width: 1100px) {
+      .hero-floats { display: none; }
+      .hero-orbit { display: none; }
+      .hero-content { max-width: 100%; }
+    }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--gold-dim); border: 0.5px solid var(--gold-mid);
+      padding: 0.4rem 1rem; border-radius: 2px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem; color: var(--gold);
+      letter-spacing: 2px; margin-bottom: 2rem;
+      animation: fadeUp 0.8s ease both;
+    }
+    .hero-tag::before {
+      content: ''; width: 6px; height: 6px;
+      background: var(--gold); border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; } 50% { opacity: 0.3; }
+    }
+    h1 {
+      font-family: 'Noto Serif SC', serif;
+      font-size: clamp(2.8rem, 6vw, 5rem);
+      font-weight: 900; line-height: 1.15;
+      letter-spacing: -1px;
+      animation: fadeUp 0.8s 0.1s ease both;
+    }
+    h1 em {
+      font-style: normal;
+      color: var(--gold);
+      position: relative;
+    }
+    .hero-sub {
+      margin-top: 1.5rem;
+      font-size: 1.05rem; color: var(--gray2);
+      line-height: 1.8; max-width: 560px;
+      animation: fadeUp 0.8s 0.2s ease both;
+    }
+    .hero-btns {
+      margin-top: 2.5rem; display: flex; gap: 1rem; flex-wrap: wrap;
+      animation: fadeUp 0.8s 0.3s ease both;
+    }
+    .btn-primary {
+      background: var(--gold); color: var(--dark);
+      padding: 0.85rem 2.2rem; border-radius: 2px;
+      font-weight: 700; font-size: 0.95rem;
+      text-decoration: none; letter-spacing: 1px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 0 30px rgba(240,192,64,0.3);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 40px rgba(240,192,64,0.5); }
+    .btn-secondary {
+      border: 0.5px solid var(--gray); color: var(--gray2);
+      padding: 0.85rem 2.2rem; border-radius: 2px;
+      font-size: 0.95rem; text-decoration: none; letter-spacing: 1px;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+
+    .hero-stats {
+      margin-top: 4rem; display: flex; gap: 3rem; flex-wrap: wrap;
+      animation: fadeUp 0.8s 0.4s ease both;
+    }
+    .stat { border-left: 2px solid var(--gold-mid); padding-left: 1rem; }
+    .stat-num {
+      font-family: 'Space Mono', monospace;
+      font-size: 1.8rem; color: var(--gold); font-weight: 700;
+    }
+    .stat-label { font-size: 0.8rem; color: var(--gray); margin-top: 2px; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* SECTIONS */
+    section { padding: 6rem 4rem; }
+    .section-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem; color: var(--gold);
+      letter-spacing: 3px; margin-bottom: 1rem;
+    }
+    h2 {
+      font-family: 'Noto Serif SC', serif;
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 700; line-height: 1.3;
+    }
+    .section-sub {
+      margin-top: 0.75rem; color: var(--gray);
+      font-size: 0.95rem; max-width: 500px; line-height: 1.7;
+    }
+
+    /* COURSE STEPS */
+    #courses { background: var(--dark2); }
+    .steps { margin-top: 4rem; display: flex; flex-direction: column; gap: 0; }
+    .step {
+      display: grid; grid-template-columns: 80px 1fr;
+      gap: 2rem; padding: 2.5rem 0;
+      border-bottom: 0.5px solid rgba(255,255,255,0.07);
+      position: relative;
+      transition: background 0.3s;
+    }
+    .step:first-child { border-top: 0.5px solid rgba(255,255,255,0.07); }
+    .step:hover { background: rgba(240,192,64,0.03); }
+    .step-num {
+      font-family: 'Space Mono', monospace;
+      font-size: 3rem; color: rgba(240,192,64,0.15);
+      font-weight: 700; line-height: 1;
+      padding-top: 4px;
+    }
+    .step-body {}
+    .step-title {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 1.4rem; font-weight: 700;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .step-badge {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem; color: var(--dark);
+      background: var(--gold); padding: 3px 10px; border-radius: 2px;
+      letter-spacing: 1px;
+    }
+    .step-desc {
+      margin-top: 0.75rem; color: var(--gray2);
+      font-size: 0.95rem; line-height: 1.8; max-width: 600px;
+    }
+    .step-points {
+      margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 8px;
+    }
+    .step-point {
+      background: var(--dark3); border: 0.5px solid rgba(255,255,255,0.1);
+      padding: 5px 14px; border-radius: 2px;
+      font-size: 0.82rem; color: var(--gray2);
+    }
+    .step-output {
+      margin-top: 1.25rem; padding: 0.75rem 1rem;
+      background: var(--gold-dim); border-left: 2px solid var(--gold);
+      font-size: 0.85rem; color: var(--gold);
+    }
+
+    /* WHO */
+    #who { background: var(--dark); }
+    .who-grid { margin-top: 3rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .who-card {
+      background: var(--dark3); border: 0.5px solid rgba(255,255,255,0.08);
+      padding: 1.75rem; border-radius: 2px;
+      transition: border-color 0.3s;
+    }
+    .who-card:hover { border-color: var(--gold-mid); }
+    .who-icon { font-size: 1.8rem; margin-bottom: 1rem; }
+    .who-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.5rem; }
+    .who-desc { color: var(--gray); font-size: 0.875rem; line-height: 1.7; }
+
+    /* TEACHER */
+    #teacher { background: var(--dark2); }
+    .teachers-grid {
+      margin-top: 3rem;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1.5rem; max-width: 1000px;
+    }
+    .teacher-card {
+      display: grid; grid-template-columns: auto 1fr;
+      gap: 1.75rem; align-items: start;
+      background: var(--dark3); border: 0.5px solid rgba(240,192,64,0.2);
+      padding: 2rem;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+    .teacher-card:hover { border-color: rgba(240,192,64,0.5); transform: translateY(-3px); }
+    .teacher-avatar {
+      width: 72px; height: 72px; border-radius: 2px;
+      background: linear-gradient(135deg, var(--dark4), rgba(240,192,64,0.1));
+      border: 1px solid var(--gold-mid);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Noto Serif SC', serif;
+      font-size: 1.6rem; color: var(--gold);
+      flex-shrink: 0;
+    }
+    .teacher-name {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 1.2rem; font-weight: 700;
+    }
+    .teacher-role-badge {
+      margin-top: 3px; color: var(--gold);
+      font-size: 0.8rem; letter-spacing: 0.5px;
+    }
+    .teacher-title {
+      margin-top: 4px; color: var(--gray);
+      font-size: 0.78rem; letter-spacing: 0.5px;
+    }
+    .teacher-desc {
+      margin-top: 0.9rem; color: var(--gray2);
+      font-size: 0.875rem; line-height: 1.8;
+    }
+    .teacher-tags { margin-top: 1.1rem; display: flex; flex-wrap: wrap; gap: 6px; }
+    .teacher-tag {
+      background: var(--dark4); border: 0.5px solid rgba(240,192,64,0.3);
+      padding: 4px 12px; border-radius: 2px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem; color: var(--gold);
+    }
+    @media (max-width: 900px) {
+      .teachers-grid { grid-template-columns: 1fr; }
+      .teacher-card { grid-template-columns: auto 1fr; }
+    }
+    @media (max-width: 500px) {
+      .teacher-card { grid-template-columns: 1fr; }
+      .teacher-avatar { width: 56px; height: 56px; font-size: 1.2rem; }
+    }
+
+    #area { background: var(--dark); }
+    .area-layout {
+      margin-top: 3rem;
+      display: grid; grid-template-columns: 1fr 380px;
+      gap: 2rem; align-items: start;
+      max-width: 1000px;
+    }
+    .area-map-wrap {
+      border: 0.5px solid rgba(240,192,64,0.15);
+      border-radius: 4px; overflow: hidden;
+      position: relative;
+    }
+    .area-info { display: flex; flex-direction: column; gap: 1rem; }
+    .area-card {
+      display: flex; gap: 1rem; align-items: flex-start;
+      background: var(--dark3); border: 0.5px solid rgba(255,255,255,0.08);
+      padding: 1.25rem; border-radius: 2px;
+      transition: border-color 0.3s;
+    }
+    .area-card.gold:hover { border-color: rgba(240,192,64,0.4); }
+    .area-card.teal:hover { border-color: rgba(79,195,195,0.4); }
+    .area-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      flex-shrink: 0; margin-top: 4px;
+    }
+    .gold-dot { background: #F0C040; box-shadow: 0 0 8px rgba(240,192,64,0.6); }
+    .teal-dot { background: #4FC3C3; box-shadow: 0 0 8px rgba(79,195,195,0.6); }
+    .area-name { font-weight: 700; font-size: 1rem; margin-bottom: 4px; }
+    .area-detail { font-size: 0.83rem; color: var(--gray); line-height: 1.7; }
+    .area-note {
+      background: var(--dark3); border-left: 2px solid rgba(240,192,64,0.3);
+      padding: 1rem 1.25rem;
+      font-size: 0.82rem; color: var(--gray); line-height: 2;
+    }
+    @media (max-width: 860px) {
+      .area-layout { grid-template-columns: 1fr; }
+    }
+
+    /* PRICE */
+    #price { background: var(--dark); }
+    .price-grid { margin-top: 3rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; max-width: 800px; }
+    .price-card {
+      background: var(--dark3); border: 0.5px solid rgba(255,255,255,0.08);
+      padding: 2rem;
+    }
+    .price-card.featured {
+      border-color: var(--gold);
+      position: relative;
+      background: linear-gradient(135deg, var(--dark3), rgba(240,192,64,0.05));
+    }
+    .price-card.featured::before {
+      content: '推荐';
+      position: absolute; top: -1px; right: 1.5rem;
+      background: var(--gold); color: var(--dark);
+      font-size: 0.7rem; font-weight: 700;
+      padding: 3px 12px; letter-spacing: 1px;
+    }
+    .price-label { font-size: 0.8rem; color: var(--gray); letter-spacing: 2px; margin-bottom: 0.75rem; }
+    .price-num {
+      font-family: 'Space Mono', monospace;
+      font-size: 2.5rem; color: var(--gold); font-weight: 700;
+    }
+    .price-unit { font-size: 0.9rem; color: var(--gray); }
+    .price-items { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 8px; }
+    .price-item { font-size: 0.875rem; color: var(--gray2); display: flex; gap: 8px; align-items: flex-start; }
+    .price-item::before { content: '—'; color: var(--gold); flex-shrink: 0; }
+
+    /* CONTACT */
+    #contact {
+      background: var(--dark2);
+      text-align: center;
+    }
+    .contact-inner { max-width: 600px; margin: 0 auto; }
+    .contact-desc { margin-top: 1rem; color: var(--gray); font-size: 0.95rem; line-height: 1.8; }
+    .contact-box {
+      margin-top: 3rem;
+      background: var(--dark3); border: 0.5px solid var(--gold-mid);
+      padding: 2.5rem;
+    }
+    .contact-box p { color: var(--gray2); font-size: 0.9rem; line-height: 1.8; }
+    .contact-box .wechat {
+      font-family: 'Space Mono', monospace;
+      font-size: 1.2rem; color: var(--gold);
+      margin: 1rem 0; letter-spacing: 2px;
+    }
+    .contact-note { margin-top: 1rem; color: var(--gray); font-size: 0.8rem; }
+    .btn-contact {
+      display: inline-block;
+      margin-top: 1.5rem;
+      background: var(--gold); color: var(--dark);
+      padding: 0.9rem 2.5rem; border-radius: 2px;
+      font-weight: 700; font-size: 0.95rem;
+      text-decoration: none; letter-spacing: 1px;
+      transition: opacity 0.2s;
+    }
+    .btn-contact:hover { opacity: 0.85; }
+
+    /* FOOTER */
+    footer {
+      background: var(--dark); border-top: 0.5px solid rgba(255,255,255,0.07);
+      padding: 2rem 4rem;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-logo {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 1rem; color: var(--gold); letter-spacing: 2px;
+    }
+    .footer-copy { font-size: 0.78rem; color: var(--gray); }
+
+    /* DIVIDER */
+    .divider {
+      width: 40px; height: 2px; background: var(--gold);
+      margin: 1.25rem 0;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      section { padding: 4rem 1.5rem; }
+      #hero { padding: 7rem 1.5rem 3rem; }
+      .who-grid { grid-template-columns: 1fr; }
+      .price-grid { grid-template-columns: 1fr; }
+      .teacher-card { grid-template-columns: 1fr; gap: 1.5rem; }
+      .step { grid-template-columns: 50px 1fr; }
+      footer { flex-direction: column; gap: 1rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">少年AI</div>
+  <div class="nav-links">
+    <a href="#courses">课程体系</a>
+    <a href="#who">适合人群</a>
+    <a href="#teacher">关于老师</a>
+    <a href="#area">服务区域</a>
+    <a href="#price">课程费用</a>
+    <a href="#contact">立即咨询</a>
+  </div>
+  <a href="#contact" class="nav-cta">免费沟通</a>
+</nav>
+
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <canvas id="hero-canvas"></canvas>
+
+  <div class="hero-orbit">
+    <div class="orbit-ring"><div class="orbit-dot"></div></div>
+    <div class="orbit-ring"><div class="orbit-dot"></div></div>
+    <div class="orbit-ring"><div class="orbit-dot"></div></div>
+  </div>
+
+  <div class="hero-floats">
+    <div class="float-card">
+      <div class="float-bar"><div class="float-dot fd1"></div><div class="float-dot fd2"></div><div class="float-dot fd3"></div></div>
+      <div class="float-label">STUDENT → AI</div>
+      <div class="float-msg">帮我写一篇作文</div>
+      <div class="float-msg ai-reply">好的！这篇文章主要讲了…… <span class="blink">▋</span></div>
+    </div>
+    <div class="float-card">
+      <div class="float-bar"><div class="float-dot fd1"></div><div class="float-dot fd2"></div><div class="float-dot fd3"></div></div>
+      <div class="float-label">AFTER COURSE · 学会判断</div>
+      <div class="float-msg">你这里说的时间线对吗？</div>
+      <div class="float-msg ai-reply">您说得对，我刚才的描述有误，正确的是…</div>
+    </div>
+    <div class="float-card">
+      <div class="float-bar"><div class="float-dot fd1"></div><div class="float-dot fd2"></div><div class="float-dot fd3"></div></div>
+      <div class="float-label">MY AI · 课末作品</div>
+      <div class="float-msg" style="color: var(--gold); font-weight:500;">「哲哲的学习助手」</div>
+      <div class="float-msg" style="font-size:0.78rem; margin-top:4px;">性格：耐心温和 · 专注数学和英语<br>已完成 3 轮优化迭代 ✓</div>
+    </div>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-tag">AI YOUTH ACCELERATOR · 杭州及周边县城</div>
+    <h1>不做<em>用AI的人</em><br>做<em>懂AI的人</em></h1>
+    <p class="hero-sub">三节课，让孩子从"复制粘贴AI答案"，到能自己设计、制作、调试一个真实可用的AI——并当着你的面演示给你看。</p>
+    <div class="hero-btns">
+      <a href="#contact" class="btn-primary">预约免费沟通</a>
+      <a href="#courses" class="btn-secondary">查看课程体系</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num">6h</div>
+        <div class="stat-label">三节课 · 共6小时</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">1v1</div>
+        <div class="stat-label">上门一对一 · 专属定制</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">10-15</div>
+        <div class="stat-label">岁 · 无需任何编程基础</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="courses">
+  <div class="section-tag">CORE PROGRAM</div>
+  <h2>三节课<br>一条完整的学习链路</h2>
+  <p class="section-sub">从认识AI的边界，到动手做出真实作品，到独立优化迭代——每一节课都有看得见的产出。</p>
+  <div class="divider"></div>
+  <div class="steps">
+
+    <div class="step">
+      <div class="step-num">01</div>
+      <div class="step-body">
+        <div class="step-title">
+          认识AI
+          <span class="step-badge">第一节课 · 建立认知</span>
+        </div>
+        <p class="step-desc">大多数孩子把AI当搜索引擎用——问一句，信一句，从不怀疑。这节课要打破这个习惯，让孩子第一次真正理解AI是什么、能做什么、会在哪里出错。</p>
+        <div class="step-points">
+          <span class="step-point">AI为什么会自信地说错话</span>
+          <span class="step-point">怎么问才能得到好答案</span>
+          <span class="step-point">三步判断AI答案对不对</span>
+          <span class="step-point">模糊指令 vs 精准指令的差距</span>
+        </div>
+        <div class="step-output">▸ 课末产出：孩子写出属于自己的AI角色完整人设</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">02</div>
+      <div class="step-body">
+        <div class="step-title">
+          动手做出来
+          <span class="step-badge">第二节课 · 实操落地</span>
+        </div>
+        <p class="step-desc">把上节课设计的人设，变成一个真实能对话的AI。孩子全程指挥——告诉老师"我要它怎么样"，看着自己的想法一步步变成现实，第一次和自己亲手做的AI说话。</p>
+        <div class="step-points">
+          <span class="step-point">把性格描述翻译成AI指令</span>
+          <span class="step-point">指令越具体AI越听话</span>
+          <span class="step-point">为什么AI会"忘记"之前的话</span>
+          <span class="step-point">第一次与自己的AI对话</span>
+        </div>
+        <div class="step-output">▸ 课末产出：孩子第一次与自己亲手做的AI真实对话</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">03</div>
+      <div class="step-body">
+        <div class="step-title">
+          优化与训练
+          <span class="step-badge">第三节课 · 独立迭代</span>
+        </div>
+        <p class="step-desc">做出来只是开始。这节课教孩子发现AI哪里答得不好、分析是哪里出了问题、自己动手修改——改一个词，AI的回答会完全不同。测试→发现→修改→再测试，独立完成一整轮。</p>
+        <div class="step-points">
+          <span class="step-point">AI答错了是哪里的问题</span>
+          <span class="step-point">改一个词结果大不同</span>
+          <span class="step-point">独立完成测试-修改闭环</span>
+          <span class="step-point">当着家长面演示讲解</span>
+        </div>
+        <div class="step-output">▸ 课末产出：孩子当着家长的面，演示并独立讲解自己的AI</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="who">
+  <div class="section-tag">WHO IS THIS FOR</div>
+  <h2>适合什么样的孩子</h2>
+  <div class="divider"></div>
+  <div class="who-grid">
+    <div class="who-card">
+      <div class="who-icon">🎮</div>
+      <div class="who-title">对AI感到好奇</div>
+      <div class="who-desc">用过ChatGPT或其他AI工具，觉得有意思，想知道它到底是怎么运作的。</div>
+    </div>
+    <div class="who-card">
+      <div class="who-icon">📚</div>
+      <div class="who-title">用AI但不会判断</div>
+      <div class="who-desc">已经在用AI写作业或查资料，但不知道答案对不对、怎么让它答得更好。</div>
+    </div>
+    <div class="who-card">
+      <div class="who-icon">🔧</div>
+      <div class="who-title">喜欢动手捣鼓</div>
+      <div class="who-desc">不喜欢纯听课，想亲手做出一个东西，看到自己的想法变成现实。</div>
+    </div>
+    <div class="who-card">
+      <div class="who-icon">🚀</div>
+      <div class="who-title">想在AI时代不落后</div>
+      <div class="who-desc">家长和孩子都意识到AI的重要性，想提前建立真正有用的认知和能力。</div>
+    </div>
+  </div>
+  <div style="margin-top: 2rem; padding: 1.25rem 1.5rem; border-left: 2px solid var(--gold); background: var(--gold-dim); max-width: 560px;">
+    <p style="font-size: 0.9rem; color: var(--gray2);">年龄：10-15岁 &nbsp;·&nbsp; 无需编程基础 &nbsp;·&nbsp; 杭州市区 &amp; 桐庐县城均可上门</p>
+  </div>
+</section>
+
+<section id="teacher">
+  <div class="section-tag">ABOUT THE TEACHERS</div>
+  <h2>认识我们的老师</h2>
+  <p class="section-sub">两位均来自企业AI一线，教的不是课本，是每天在用的真实经验。</p>
+  <div class="divider"></div>
+  <div class="teachers-grid">
+
+    <div class="teacher-card">
+      <div class="teacher-avatar">粽</div>
+      <div>
+        <div class="teacher-name">粽子老师</div>
+        <div class="teacher-role-badge">AI工程师 · 一线实践者</div>
+        <div class="teacher-title">浙江工商大学 · 企业AI落地工程师</div>
+        <p class="teacher-desc">日常使用 Claude Code、Cursor 等主流AI工具完成真实企业项目，深度参与AI工作流设计与Agent应用落地。不是照本宣科，教的都是自己每天在用的东西。<br><br>教孩子AI，不是教工具操作，是教真正在一线工作中摸索出来的思维方式——怎么问、怎么判断、怎么让AI越来越听话。</p>
+        <div class="teacher-tags">
+          <span class="teacher-tag">Claude Code</span>
+          <span class="teacher-tag">Deepseek</span>
+          <span class="teacher-tag">OpenClaw</span>
+          <span class="teacher-tag">Hermes</span>
+          <span class="teacher-tag">浙江工商大学</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="teacher-card">
+      <div class="teacher-avatar" style="background: linear-gradient(135deg, var(--dark4), rgba(79,195,195,0.15)); border-color: rgba(79,195,195,0.4); color: var(--accent);">榆</div>
+      <div>
+        <div class="teacher-name">榆木老师</div>
+        <div class="teacher-role-badge" style="color: var(--accent);">AI架构师 · 一线实践者</div>
+        <div class="teacher-title">浙江工商大学 · 企业AI落地架构师</div>
+        <p class="teacher-desc">专注AI系统架构设计与多模型协同方案落地，擅长将复杂的AI工作流拆解为孩子能理解的思维模型。相信最好的学习方式，是亲手搭出一个真实跑起来的东西。<br><br>在一线踩过的坑，比教科书上写的多得多——这才是真正值得传授给下一代的东西。</p>
+        <div class="teacher-tags">
+          <span class="teacher-tag" style="border-color: rgba(79,195,195,0.3); color: var(--accent);">AI架构</span>
+          <span class="teacher-tag" style="border-color: rgba(79,195,195,0.3); color: var(--accent);">多模型协同</span>
+          <span class="teacher-tag" style="border-color: rgba(79,195,195,0.3); color: var(--accent);">工作流设计</span>
+          <span class="teacher-tag" style="border-color: rgba(79,195,195,0.3); color: var(--accent);">Agent落地</span>
+          <span class="teacher-tag" style="border-color: rgba(79,195,195,0.3); color: var(--accent);">浙江工商大学</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="area">
+  <div class="section-tag">SERVICE AREA</div>
+  <h2>服务区域</h2>
+  <p class="section-sub">杭州市区与桐庐县城均可上门，高铁直达，周末排课。</p>
+  <div class="divider"></div>
+  <div class="area-layout">
+
+    <div class="area-map-wrap">
+      <div id="leaflet-map" style="width:100%; height:380px;"></div>
+    </div>
+
+    <div class="area-info">
+      <div class="area-card gold">
+        <div class="area-dot gold-dot"></div>
+        <div>
+          <div class="area-name">杭州市区</div>
+          <div class="area-detail">西湖区 · 拱墅区 · 上城区等市区范围<br>周末上门，时间灵活协商</div>
+        </div>
+      </div>
+      <div class="area-card teal">
+        <div class="area-dot teal-dot"></div>
+        <div>
+          <div class="area-name">桐庐县城</div>
+          <div class="area-detail">老师本地 · 高铁40分钟直达杭州<br>县城家庭同样可预约上门</div>
+        </div>
+      </div>
+      <div class="area-note">
+        <span style="color: var(--gold);">●</span> 周末优先排课 &nbsp;·&nbsp; 工作日可协商<br>
+        <span style="color: var(--gold);">●</span> 上门交通费用已包含在课程价格内<br>
+        <span style="color: var(--gold);">●</span> 其他区域可私信咨询，视情况安排
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="price">
+  <div class="section-tag">PRICING</div>
+  <h2>课程费用</h2>
+  <div class="divider"></div>
+  <div class="price-grid">
+    <div class="price-card featured">
+      <div class="price-label">AI实操课 <span style="color: var(--gold); font-size: 0.7rem; background: rgba(240,192,64,0.15); padding: 2px 8px; border-radius: 2px; letter-spacing: 1px;">重点</span></div>
+      <div style="display: flex; align-items: flex-end; gap: 12px; margin-top: 4px;">
+        <div class="price-num">¥1998</div>
+        <div style="margin-bottom: 10px;">
+          <span style="font-family: 'Space Mono', monospace; font-size: 0.95rem; color: var(--gray); text-decoration: line-through;">¥2498</span>
+          <span style="margin-left: 8px; font-size: 0.75rem; background: rgba(240,192,64,0.2); color: var(--gold); border: 0.5px solid var(--gold-mid); padding: 2px 8px; border-radius: 2px; letter-spacing: 1px;">八折</span>
+        </div>
+      </div>
+      <div class="price-unit">三节课 · 共6小时</div>
+      <div class="price-items">
+        <div class="price-item">一对一上门教学，杭州及周边县城</div>
+        <div class="price-item">课前免费沟通，了解孩子情况定制内容</div>
+        <div class="price-item">三节课每节约2小时，时间灵活协商</div>
+        <div class="price-item">课末产出：孩子亲手做的真实AI作品</div>
+        <div class="price-item">第三节课家长现场见证演示</div>
+      </div>
+    </div>
+    <div class="price-card">
+      <div class="price-label">进阶课（选修）</div>
+      <div class="price-num" style="font-size: 1.4rem; margin-top: 0.5rem;">咨询定价</div>
+      <div class="price-unit">第四节课起</div>
+      <div class="price-items" style="margin-top: 1.25rem;">
+        <div class="price-item">部署独立小龙虾或 Hermes 等 Agent</div>
+        <div class="price-item">配置链接到微信，即可直接体验</div>
+        <div class="price-item">利用 Agent 将成果配置为可分享的网页</div>
+        <div class="price-item">适合完成基础课、想继续深入的孩子</div>
+        <div class="price-item">具体内容根据孩子进度定制</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="contact-inner">
+    <div class="section-tag">GET STARTED</div>
+    <h2>预约免费沟通</h2>
+    <p class="contact-desc">在正式报名之前，我们会先聊聊孩子的情况——年龄、有没有用过AI、对什么感兴趣。课程内容会根据孩子做调整，不是标准流水线。</p>
+    <div class="contact-box">
+      <p>添加微信，发送「少年AI」<br>我会在24小时内回复，安排一次15分钟的免费沟通</p>
+      <div class="wechat">微信号：[你的微信号]</div>
+      <p class="contact-note">杭州市区及周边县城均可上门 · 周末排课优先</p>
+      <a href="#" class="btn-contact">立即咨询</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">少年AI · SHAONIAN AI</div>
+  <div class="footer-copy">杭州 · 青少年AI一对一教学 · 周末上门</div>
+</footer>
+
+<!-- Leaflet -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+// 初始化地图
+const map = L.map('leaflet-map', {
+  center: [29.98, 119.95],
+  zoom: 9,
+  zoomControl: true,
+  scrollWheelZoom: false,
+});
+
+// 深色风格瓦片
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '© OpenStreetMap',
+  maxZoom: 16,
+  className: 'dark-tiles',
+}).addTo(map);
+
+// 杭州市区范围圈
+const hzCircle = L.circle([30.2572, 120.1536], {
+  radius: 18000,
+  color: '#F0C040',
+  fillColor: '#F0C040',
+  fillOpacity: 0.12,
+  weight: 2,
+  opacity: 0.7,
+  dashArray: '6 4',
+}).addTo(map);
+
+// 杭州中心点
+const hzDot = L.circleMarker([30.2572, 120.1536], {
+  radius: 7,
+  color: '#F0C040',
+  fillColor: '#F0C040',
+  fillOpacity: 1,
+  weight: 2,
+}).addTo(map);
+
+// 杭州标签
+const hzLabel = L.divIcon({
+  className: '',
+  html: `<div style="
+    background:#F0C040; color:#0D0D1A;
+    font-family:'Noto Sans SC',sans-serif;
+    font-size:11px; font-weight:700;
+    padding:4px 10px; border-radius:2px;
+    box-shadow:0 0 12px rgba(240,192,64,0.8);
+    white-space:nowrap; margin-top:12px; margin-left:8px;
+  ">杭州市区</div>`,
+  iconAnchor: [0, 0],
+});
+L.marker([30.2572, 120.1536], { icon: hzLabel }).addTo(map);
+
+// 桐庐县城范围圈
+const tlCircle = L.circle([29.7933, 119.6914], {
+  radius: 10000,
+  color: '#4FC3C3',
+  fillColor: '#4FC3C3',
+  fillOpacity: 0.12,
+  weight: 2,
+  opacity: 0.7,
+  dashArray: '6 4',
+}).addTo(map);
+
+// 桐庐中心点
+const tlDot = L.circleMarker([29.7933, 119.6914], {
+  radius: 6,
+  color: '#4FC3C3',
+  fillColor: '#4FC3C3',
+  fillOpacity: 1,
+  weight: 2,
+}).addTo(map);
+
+// 桐庐标签
+const tlLabel = L.divIcon({
+  className: '',
+  html: `<div style="
+    background:#4FC3C3; color:#0D0D1A;
+    font-family:'Noto Sans SC',sans-serif;
+    font-size:11px; font-weight:700;
+    padding:4px 10px; border-radius:2px;
+    box-shadow:0 0 12px rgba(79,195,195,0.8);
+    white-space:nowrap; margin-top:12px; margin-left:8px;
+  ">桐庐县城</div>`,
+  iconAnchor: [0, 0],
+});
+L.marker([29.7933, 119.6914], { icon: tlLabel }).addTo(map);
+
+// 高铁连接虚线
+const railLine = L.polyline(
+  [[30.2572, 120.1536], [29.7933, 119.6914]],
+  {
+    color: '#F0C040',
+    opacity: 0.4,
+    weight: 2,
+    dashArray: '8 5',
+  }
+).addTo(map);
+
+// 高铁标签（中间点）
+const midLabel = L.divIcon({
+  className: '',
+  html: `<div style="
+    background:rgba(13,13,26,0.9);
+    border:1px solid rgba(240,192,64,0.5);
+    color:rgba(240,192,64,0.95);
+    font-family:monospace; font-size:10px;
+    padding:3px 9px; border-radius:2px;
+    white-space:nowrap;
+  ">🚄 高铁 40 min</div>`,
+  iconAnchor: [45, 10],
+});
+L.marker([30.025, 119.922], { icon: midLabel }).addTo(map);
+</script>
+
+<style>
+/* 深色瓦片滤镜 */
+.dark-tiles {
+  filter: invert(90%) hue-rotate(180deg) saturate(0.55) brightness(0.82);
+}
+/* 隐藏Leaflet默认marker图标 */
+.leaflet-marker-icon { background: none !important; border: none !important; }
+</style>
+
+<script>
+// Canvas particle system
+const canvas = document.getElementById('hero-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [], mouse = { x: -999, y: -999 };
+
+function resize() {
+  const hero = document.getElementById('hero');
+  W = canvas.width = hero.offsetWidth;
+  H = canvas.height = hero.offsetHeight;
+}
+
+class Particle {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * W;
+    this.y = Math.random() * H;
+    this.size = Math.random() * 1.5 + 0.5;
+    this.speedX = (Math.random() - 0.5) * 0.4;
+    this.speedY = (Math.random() - 0.5) * 0.4;
+    this.life = Math.random();
+    this.maxLife = Math.random() * 0.5 + 0.5;
+    const palette = [
+      [240, 192, 64],   // gold
+      [79, 195, 195],   // teal
+      [167, 139, 250],  // purple
+    ];
+    this.color = palette[Math.floor(Math.random() * palette.length)];
+  }
+  update() {
+    this.x += this.speedX;
+    this.y += this.speedY;
+    this.life += 0.003;
+    const dx = this.x - mouse.x, dy = this.y - mouse.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist < 100) {
+      this.x += dx / dist * 0.8;
+      this.y += dy / dist * 0.8;
+    }
+    if (this.life > this.maxLife || this.x < 0 || this.x > W || this.y < 0 || this.y > H) this.reset();
+  }
+  draw() {
+    const alpha = Math.sin((this.life / this.maxLife) * Math.PI) * 0.6;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${this.color[0]},${this.color[1]},${this.color[2]},${alpha})`;
+    ctx.fill();
+  }
+}
+
+function initParticles() {
+  particles = [];
+  for (let i = 0; i < 120; i++) particles.push(new Particle());
+}
+
+function drawConnections() {
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 90) {
+        const alpha = (1 - dist / 90) * 0.12;
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.strokeStyle = `rgba(240,192,64,${alpha})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+    }
+  }
+}
+
+function animate() {
+  ctx.clearRect(0, 0, W, H);
+  drawConnections();
+  particles.forEach(p => { p.update(); p.draw(); });
+  requestAnimationFrame(animate);
+}
+
+document.getElementById('hero').addEventListener('mousemove', e => {
+  const rect = canvas.getBoundingClientRect();
+  mouse.x = e.clientX - rect.left;
+  mouse.y = e.clientY - rect.top;
+});
+document.getElementById('hero').addEventListener('mouseleave', () => {
+  mouse.x = -999; mouse.y = -999;
+});
+
+window.addEventListener('resize', () => { resize(); initParticles(); });
+resize(); initParticles(); animate();
+</script>
+</body>
+</html>
