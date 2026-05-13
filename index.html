@@ -827,12 +827,14 @@ const map = L.map('leaflet-map', {
   scrollWheelZoom: false,
 });
 
-// 深色风格瓦片
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: '© OpenStreetMap',
+// 深色风格瓦片 — 用 CartoDB DarkMatter 替代 CSS 滤镜，手机端兼容
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  attribution: '© OpenStreetMap © CartoDB',
   maxZoom: 16,
-  className: 'dark-tiles',
 }).addTo(map);
+
+// 响应式：窗口大小变化时刷新地图尺寸（手机旋转 / 布局切换）
+window.addEventListener('resize', () => map.invalidateSize());
 
 // 杭州市区范围圈
 const hzCircle = L.circle([30.2572, 120.1536], {
@@ -932,12 +934,13 @@ L.marker([30.025, 119.922], { icon: midLabel }).addTo(map);
 </script>
 
 <style>
-/* 深色瓦片滤镜 */
-.dark-tiles {
-  filter: invert(90%) hue-rotate(180deg) saturate(0.55) brightness(0.82);
-}
 /* 隐藏Leaflet默认marker图标 */
 .leaflet-marker-icon { background: none !important; border: none !important; }
+
+/* 手机端地图高度适配 */
+@media (max-width: 768px) {
+  #leaflet-map { height: 280px !important; }
+}
 </style>
 
 <script>
