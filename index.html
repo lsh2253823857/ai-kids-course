@@ -822,7 +822,7 @@
 // 初始化地图
 const map = L.map('leaflet-map', {
   center: [30.025, 119.922],
-  zoom: 8,
+  zoom: 7,
   zoomControl: true,
   scrollWheelZoom: false,
 });
@@ -840,8 +840,8 @@ window.addEventListener('resize', () => map.invalidateSize());
 // 杭州市区范围圈
 const hzCircle = L.circle([30.2572, 120.1536], {
   radius: 18000,
-  color: '#F0C040',
-  fillColor: '#F0C040',
+  color: '#FF6B6B',
+  fillColor: '#FF6B6B',
   fillOpacity: 0.25,
   weight: 4,
   opacity: 1,
@@ -850,8 +850,8 @@ const hzCircle = L.circle([30.2572, 120.1536], {
 // 杭州中心点
 const hzDot = L.circleMarker([30.2572, 120.1536], {
   radius: 7,
-  color: '#F0C040',
-  fillColor: '#F0C040',
+  color: '#FF6B6B',
+  fillColor: '#FF6B6B',
   fillOpacity: 1,
   weight: 2,
 }).addTo(map);
@@ -860,11 +860,11 @@ const hzDot = L.circleMarker([30.2572, 120.1536], {
 const hzLabel = L.divIcon({
   className: '',
   html: `<div style="
-    background:#F0C040; color:#0D0D1A;
+    background:#FF6B6B; color:#fff;
     font-family:'Noto Sans SC',sans-serif;
     font-size:13px; font-weight:700;
     padding:6px 14px; border-radius:4px;
-    box-shadow:0 0 14px rgba(240,192,64,0.9);
+    box-shadow:0 0 14px rgba(255,107,107,0.9);
     white-space:nowrap; margin-top:14px; margin-left:8px;
   ">杭州市区</div>`,
   iconAnchor: [0, 0],
