@@ -863,10 +863,10 @@ const hzLabel = L.divIcon({
   html: `<div style="
     background:#F0C040; color:#0D0D1A;
     font-family:'Noto Sans SC',sans-serif;
-    font-size:11px; font-weight:700;
-    padding:4px 10px; border-radius:2px;
-    box-shadow:0 0 12px rgba(240,192,64,0.8);
-    white-space:nowrap; margin-top:12px; margin-left:8px;
+    font-size:13px; font-weight:700;
+    padding:6px 14px; border-radius:4px;
+    box-shadow:0 0 14px rgba(240,192,64,0.9);
+    white-space:nowrap; margin-top:14px; margin-left:8px;
   ">杭州市区</div>`,
   iconAnchor: [0, 0],
 });
@@ -898,40 +898,14 @@ const tlLabel = L.divIcon({
   html: `<div style="
     background:#4FC3C3; color:#0D0D1A;
     font-family:'Noto Sans SC',sans-serif;
-    font-size:11px; font-weight:700;
-    padding:4px 10px; border-radius:2px;
-    box-shadow:0 0 12px rgba(79,195,195,0.8);
-    white-space:nowrap; margin-top:12px; margin-left:8px;
+    font-size:13px; font-weight:700;
+    padding:6px 14px; border-radius:4px;
+    box-shadow:0 0 14px rgba(79,195,195,0.9);
+    white-space:nowrap; margin-top:14px; margin-left:8px;
   ">桐庐县城</div>`,
   iconAnchor: [0, 0],
 });
 L.marker([29.7933, 119.6914], { icon: tlLabel }).addTo(map);
-
-// 高铁连接虚线
-const railLine = L.polyline(
-  [[30.2572, 120.1536], [29.7933, 119.6914]],
-  {
-    color: '#F0C040',
-    opacity: 0.4,
-    weight: 2,
-    dashArray: '8 5',
-  }
-).addTo(map);
-
-// 高铁标签（中间点）
-const midLabel = L.divIcon({
-  className: '',
-  html: `<div style="
-    background:rgba(13,13,26,0.9);
-    border:1px solid rgba(240,192,64,0.5);
-    color:rgba(240,192,64,0.95);
-    font-family:monospace; font-size:10px;
-    padding:3px 9px; border-radius:2px;
-    white-space:nowrap;
-  ">🚄 高铁 40 min</div>`,
-  iconAnchor: [45, 10],
-});
-L.marker([30.025, 119.922], { icon: midLabel }).addTo(map);
 </script>
 
 <style>
